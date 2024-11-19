@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:stripepayment/payment_dashboard/controller/home_controller.dart';
+import '../../core/stripe_service.dart';
 import '../controller/controller.dart';
 
 class PaymentMethod extends StatelessWidget {
   PaymentMethod({super.key});
+  final PaymentDashboardController paymentDashboardController=Get.put(PaymentDashboardController());
+
   final CardController controller = Get.put(CardController());
   @override
   Widget build(BuildContext context) {
@@ -30,8 +33,10 @@ class PaymentMethod extends StatelessWidget {
           children: [
             // Add Card Button
             GestureDetector(
-              onTap: () {
-                // Handle add card logic here
+              onTap: ()async {
+                paymentDashboardController.isOneTimePayment.value=false;
+
+                await StripeService.instance.setupPaymentMethod();
               },
               child: Container(
                 padding:

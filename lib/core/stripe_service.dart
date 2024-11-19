@@ -6,12 +6,17 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:stripepayment/add_card_and_show_card_screen/controller/controller.dart';
 import 'package:stripepayment/core/stripe_keys.dart';
+import 'package:stripepayment/payment_dashboard/controller/home_controller.dart';
 
 
 class StripeService {
   StripeService._();
   static final StripeService instance = StripeService._();
+final PaymentDashboardController paymentDashboardController=Get.put(PaymentDashboardController());
+
+  var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2M0NDBlZWU0OTQ3OWY2MjJkMjhmMCIsImVtYWlsIjoieWFzaW45ODlAZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3MzIwMDI4MzIsImV4cCI6MTczMjA4OTIzMn0.1q2XijirP_-N30j7E8TmDuEF7z_gLxuYjEoVPd2G2X4";
 
   Future<void> setupPaymentMethod() async {
     try {
@@ -41,8 +46,6 @@ class StripeService {
       final Dio dio = Dio();
       Map<String, dynamic> data = {
         "payment_method_types[]": "card",
-        // Uncomment if associating with a customer
-        // "customer": "cus_yourCustomerIdHere",
       };
       var response = await dio.post(
         "https://api.stripe.com/v1/setup_intents",
@@ -68,7 +71,6 @@ class StripeService {
   Future<void> _confirmSetupIntent(String setupIntentClientSecret) async {
     try {
       await Stripe.instance.presentPaymentSheet();
-
       log('Setup Successful!');
 
       await _getSetupDetails(setupIntentClientSecret);
@@ -97,35 +99,28 @@ class StripeService {
       log('Response Status: ${response.statusCode}');
       log('Response Data: ${response.data}');
 
-      // Check if the response has data and payment method
+
       if (response.data != null && response.data['payment_method'] != null) {
         String paymentMethodId = response.data['payment_method'];
 
-        // // Add a null check for cardModelList.value.data
-        // if (cardMethodController.cardModelList.value.data != null &&
-        //     cardMethodController.cardModelList.value.data!.isNotEmpty) {
-        //
-        //   addNewCard(
-        //     paymentMethodId,
-        //     cardMethodController.cardModelList.value.data![0].customerId.toString(),
-        //   );
-        // } else {
-        //   cardData(paymentMethodId);
-        // }
-
-        cardData(paymentMethodId);
+        if(paymentDashboardController.isOneTimePayment.value==true){
+          cardData(paymentMethodId);
+        } else{
+          final CardController cardController=Get.put(CardController());
+          addNewCard(
+            paymentMethodId,
+            cardController.cardModelList.value.data![0].customerId.toString(),
+          );
+        }
         log('Payment Method ID: $paymentMethodId');
       }
     } catch (e) {
       log('Failed to retrieve setup details: $e');
     }
   }
-
+//start Backend api called
 
   Future<void> cardData(String paymentMethodId) async {
-    var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2IxYTg5YjlhOTJkMjRhN2FkYzg0ZCIsImVtYWlsIjoieWFzaW45OUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczMTkyNjY2NiwiZXhwIjoxNzMyMDEzMDY2fQ.FV2dRFvkV6-Ve85146vLoOx3VwwoRJBbezwhLRfmiDQ";
-
-
     final url =
     Uri.parse('https://employee-beryl.vercel.app/api/v1/stripe/save-card');
 
@@ -158,7 +153,6 @@ class StripeService {
     }
   }
   Future<void> paymentConfirm(String pmId) async {
-    var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2IxYTg5YjlhOTJkMjRhN2FkYzg0ZCIsImVtYWlsIjoieWFzaW45OUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczMTkyNjY2NiwiZXhwIjoxNzMyMDEzMDY2fQ.FV2dRFvkV6-Ve85146vLoOx3VwwoRJBbezwhLRfmiDQ";
 
     final url = Uri.parse('https://employee-beryl.vercel.app/api/v1/stripe/buy-token');
     final headers = {
@@ -193,8 +187,6 @@ class StripeService {
             margin: const EdgeInsets.all(10),
             borderRadius: 8,
           );
-
-
         } else {
           EasyLoading.show(
             status: 'Please check your card information',
@@ -209,54 +201,48 @@ class StripeService {
   }
 
 
-  // Future<void> addNewCard(String paymentMethodId, String customerId) async {
-  //   var accessToken = StorageService.token;
-  //
-  //   if (accessToken == null || accessToken.isEmpty) {
-  //     log("Error: Access token is null or empty");
-  //     return;
-  //   }
-  //
-  //   final url = Uri.parse(
-  //       'https://employee-beryl.vercel.app/api/v1/stripe/save-new-card');
-  //
-  //   final body = jsonEncode(
-  //       {"customerId": customerId, "paymentMethodId": paymentMethodId});
-  //
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': accessToken
-  //       },
-  //       body: body,
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final responseData = jsonDecode(response.body);
-  //       log('Response:.... ${responseData['message']}');
-  //       log('Status code: ${response.statusCode}');
-  //       log('Status code200: ${response.body}');
-  //       final CardMethodController cardMethodController =
-  //       Get.put(CardMethodController());
-  //       cardMethodController.getCardMethod();
-  //       Get.snackbar(
-  //         "Success",
-  //         "Card added successfully",
-  //         snackPosition: SnackPosition.TOP,
-  //         backgroundColor: AppColors.primary,
-  //         colorText: Colors.white,
-  //         icon: const Icon(Icons.check_circle, color: Colors.green),
-  //         duration: const Duration(seconds: 3),
-  //         margin: const EdgeInsets.all(10),
-  //         borderRadius: 8,
-  //       );
-  //     } else {
-  //       log('Failed to create customer: ${response.body}');
-  //     }
-  //   } catch (error) {
-  //     log('Error: $error');
-  //   }
-  // }
+  Future<void> addNewCard(String paymentMethodId, String customerId) async {
+
+    final url = Uri.parse(
+        'https://employee-beryl.vercel.app/api/v1/stripe/save-new-card');
+
+    final body = jsonEncode(
+        {"customerId": customerId, "paymentMethodId": paymentMethodId});
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        log('Response:.... ${responseData['message']}');
+        log('Status code: ${response.statusCode}');
+        log('Status code200: ${response.body}');
+        final CardController cardMethodController =
+        Get.put(CardController());
+        cardMethodController.getCardMethod();
+        Get.snackbar(
+          "Success",
+          "Card added successfully",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.deepPurple,
+          colorText: Colors.white,
+          icon: const Icon(Icons.check_circle, color: Colors.green),
+          duration: const Duration(seconds: 3),
+          margin: const EdgeInsets.all(10),
+          borderRadius: 8,
+        );
+      } else {
+        log('Failed to create customer: ${response.body}');
+      }
+    } catch (error) {
+      log('Error: $error');
+    }
+  }
 }

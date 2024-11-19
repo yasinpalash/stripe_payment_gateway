@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stripepayment/add_card_and_show_card_screen/screens/add_new_card_and_show_card_screen.dart';
-
+import 'package:stripepayment/payment_dashboard/controller/home_controller.dart';
 import '../../core/stripe_service.dart';
 
-class HomeScreens extends StatelessWidget {
-  const HomeScreens({super.key});
-
+class PaymentDashboard extends StatelessWidget {
+   PaymentDashboard({super.key});
+final PaymentDashboardController paymentDashboard=Get.put(PaymentDashboardController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,8 +64,10 @@ class HomeScreens extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             GestureDetector(
-              onTap: () {
-                StripeService.instance.setupPaymentMethod();
+              onTap: ()  async {
+                paymentDashboard.isOneTimePayment.value=true;
+
+               await StripeService.instance.setupPaymentMethod();
               },
               child: Container(
                 alignment: Alignment.center,

@@ -8,9 +8,8 @@ import 'package:http/http.dart' as http;
 class CardController extends GetxController {
   final Rx<CardModel> _cardModelList = CardModel().obs;
   Rx<CardModel> get cardModelList => _cardModelList;
+  var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2M0NDBlZWU0OTQ3OWY2MjJkMjhmMCIsImVtYWlsIjoieWFzaW45ODlAZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3MzIwMDI4MzIsImV4cCI6MTczMjA4OTIzMn0.1q2XijirP_-N30j7E8TmDuEF7z_gLxuYjEoVPd2G2X4";
 
-  var accessToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2IxYTg5YjlhOTJkMjRhN2FkYzg0ZCIsImVtYWlsIjoieWFzaW45OUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczMTkyNjY2NiwiZXhwIjoxNzMyMDEzMDY2fQ.FV2dRFvkV6-Ve85146vLoOx3VwwoRJBbezwhLRfmiDQ";
 
   RxBool isLoading = false.obs;
   final url = Uri.parse('https://employee-beryl.vercel.app/api/v1/stripe/user-payment-method');
@@ -34,7 +33,6 @@ class CardController extends GetxController {
        log(response.body);
       } else {
       log(response.body);
-        EasyLoading.showError('Failed to load data: ${response.statusCode}');
       }
     } catch (error) {
       EasyLoading.showError('An unexpected error occurred. Please try again.');
