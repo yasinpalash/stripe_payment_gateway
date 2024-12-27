@@ -16,7 +16,7 @@ class StripeService {
   static final StripeService instance = StripeService._();
 final PaymentDashboardController paymentDashboardController=Get.put(PaymentDashboardController());
 
-  var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2M0NDBlZWU0OTQ3OWY2MjJkMjhmMCIsImVtYWlsIjoieWFzaW45ODlAZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3MzIwMDI4MzIsImV4cCI6MTczMjA4OTIzMn0.1q2XijirP_-N30j7E8TmDuEF7z_gLxuYjEoVPd2G2X4";
+  var accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzFlMTA3MDIwOTI2MTFiZDFkZjFjNSIsImVtYWlsIjoieWFzaW5AZ21haWwuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3MzM3Mzc2MDAsImV4cCI6MTczMzgyNDAwMH0.vsJnVK-hXIVuvnofjPZFv2qB22KEIxAlateEatY5LkU";
 
   Future<void> setupPaymentMethod() async {
     try {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import 'app.dart';
 import 'core/stripe_keys.dart';
 
@@ -21,5 +20,8 @@ Android
   //step4:FlutterFragmentActivity -- mainActivity.kt
   //step5:add proguard-rules.pro--android/app
   //step6:initialized
+  //step7:void main setup
+
 */
+//await StripeService.instance.setupPaymentMethod();
 //https://www.youtube.com/watch?v=Mx9TCmEioAQ
