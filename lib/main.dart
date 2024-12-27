@@ -13,6 +13,7 @@ Future<void> _setup() async {
   Stripe.publishableKey = stripePublishableKey;
 }
 /*
+
 Android
   // step1: minSDk 21--app/build.gradle
   // step2:Check kotlin version--settings.gradle
