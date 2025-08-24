@@ -1,16 +1,16 @@
-# stripepayment
+# 💳 Flutter Stripe Payment Gateway Integration
 
-A new Flutter project.
+A **Flutter** application that integrates the **Stripe Payment Gateway** for secure and seamless online payments.  
+This project demonstrates how to **add, save, and manage cards** securely, process **payments**, and store **card information** on the server.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🔹 **Stripe Payment Gateway** integration.
+- 🔹 Save and manage **card information** securely on the server.
+- 🔹 Complete **one-time** and **recurring** payments.
+- 🔹 Error handling for failed or declined payments.
+- 🔹 Responsive UI and user-friendly payment flow.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
